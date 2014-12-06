@@ -97,7 +97,8 @@ public class GameObj {
 	 * @param obj : other object
 	 * @return whether this object intersects the other object.
 	 */
-	public boolean intersects(GameObj obj){		
+	public boolean intersects(GameObj obj){	
+		
 		return (pos_x + width >= obj.pos_x
 				&& pos_y + height >= obj.pos_y
 				&& obj.pos_x + obj.width >= pos_x 
@@ -167,7 +168,6 @@ public class GameObj {
 	 * @return direction of impending object, null if all clear.
 	 */
 	public Direction hitObj(GameObj other) {
-
 		if (this.willIntersect(other)) {
 			hit = true; 
 			double dx = other.pos_x + other.width /2 - (pos_x + width /2);
