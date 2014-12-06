@@ -16,8 +16,8 @@ public class Circle extends GameObj {
 	public static final int SIZE = 20;
 	public static final int INIT_POS_X = 170;
 	public static final int INIT_POS_Y = 170;
-	public static int INIT_VEL_X = 6;
-	public static int INIT_VEL_Y = 7;
+	public static int INIT_VEL_X = 2;
+	public static int INIT_VEL_Y = 3;
 	
 
 	public Circle(int courtWidth, int courtHeight) {

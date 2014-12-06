@@ -14,5 +14,21 @@ public class Instructions_Screen extends JPanel{
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));	
 		
 	}
+
+	public void start() {
+		Game game = new Game();
+		game.run(); 	
+	}
+	
+	public void quit() {
+		System.exit(0);
+	}
+
+	public void back() {
+		IntroWindow intro = new IntroWindow(); 
+		intro.run(); 
+		
+	}
+
 }
 

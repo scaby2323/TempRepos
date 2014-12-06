@@ -12,7 +12,8 @@ import javax.swing.*;
 
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.TreeSet;
+
+
 
 /**
  * GameCourt
@@ -23,56 +24,62 @@ import java.util.TreeSet;
  * 
  */
 @SuppressWarnings("serial")
-public class GameCourt extends JPanel {
+public class GameCourt extends JPanel{
 
 	// the state of the game logic
 	private Circle ball; // the Golden ball, bounces
 	private Rectangle bar;// the Black Rectangle, keyboard control
 	private Blocks temp; 
-
+	
 	public boolean playing = false; // whether the game is running
 	private JLabel status; // Current status text (i.e. Running...)
 	private JLabel lives; // Current number of lives
 	private JLabel score; 
-	private JLabel times; 
+	private JLabel times;
 
 	// Game constants
 	public static final int COURT_WIDTH = 800;
 	public static final int COURT_HEIGHT = 400;
 	public static final int BAR_VELOCITY = 20;
-
+	
 	// Update interval for timer, in milliseconds
 	public static final int INTERVAL = 35;
-
-	public int num_rows; 
-	public int num_cols; 
-
+	
 	//create array to draw blocks
-	private Blocks [][] blocks = new Blocks[num_rows][num_cols];
-
+	private Blocks [][] blocks;
+	
 	//create ArrayList of blocks that were hit
 	private ArrayList<Blocks> hitBlocks = new ArrayList<Blocks>(); 
-
-
-
-
-	public LevelScanner level_info; 
-
-	int num_lives = 3; 
+	
+	public LevelScanner level_info;
+	
+	private int num_lives = 3; 
 	private int num_score = 0; 
 	private int time = 0; 
-	private int num_blocks = num_rows*num_cols; 
+	private int num_rows = 0; 
+	private int num_cols = 0; 
 	private int level = 0; 
-
+	private int num_blocks = 0; 
+	
 	public void getLevelInfo() throws IOException{
-		level_info = new LevelScanner("C:/Levels.txt");
+		level_info = new LevelScanner("Users/samanthacaby/java_workspace/BrickBreaker/src/Levels.txt");
 		ArrayList<String> info_list = level_info.getLevelInfo(level); 
+		num_rows = info_list.size(); 
+		String col_size = info_list.get(0); 
+		for (int c = 0; c < col_size.length(); c++){
+			if(col_size.charAt(c) == '.'){
+				num_cols++; 
+			}
+			else{
+				num_cols += (int)(col_size.charAt(c)); 
+			}
+		}
+		num_blocks = num_rows*num_cols; 
+		blocks = new Blocks[num_rows][num_cols];
 		Iterator<String> iter = info_list.iterator(); 
 		while(iter.hasNext()){
 			String row = iter.next(); 
 			String[] row_info = row.split(" "); 
-			num_rows = row_info.length; 
-			System.out.println(num_rows);
 			for(int r = 0; r<row_info.length; r++){
 				String check = row_info[r]; 
 				for(int c = 0; c<check.length(); c++){
@@ -95,7 +102,8 @@ public class GameCourt extends JPanel {
 			}
 		}
 	}
-
+	
+	
 	public GameCourt(JLabel status, JLabel lives, JLabel score, JLabel times) {
 		// creates border around the court area, JComponent method
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));
@@ -153,8 +161,14 @@ public class GameCourt extends JPanel {
 		num_lives = 3; 
 		num_score = 0; 
 		time = 0; 
-
-
+		
+		try {
+			getLevelInfo();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} 
+	
 		playing = true;
 		status.setText("Playing...");
 		lives.setText("Lives: " + num_lives); 
@@ -165,39 +179,10 @@ public class GameCourt extends JPanel {
 		requestFocusInWindow();
 	}
 
-	public void newGame(){
-		hitBlocks = new ArrayList<Blocks>();
-		ball = new Circle(COURT_WIDTH, COURT_HEIGHT); 
-		time = 0; 
-		/*for(int i = 0; i < blocks.length; i++){
-			for(int j = 0; j <  blocks[0].length; j++){
-				int w = 80*(i); 
-				int h = 40*(j); 
-				temp = new Blocks(w, h, COURT_WIDTH, COURT_HEIGHT);
-				blocks[i][j] = temp; 
-			}
-		}*/
-
-		try {
-			getLevelInfo();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} 
-
-		level++; 
-		status.setText("Next Level...");
-		lives.setText("Lives: " + num_lives); 
-		score.setText("Score: " + num_score); 
-		times.setText("Time: " + times);
-
-	}
-
 	public void quit() {
 		System.exit(0);		
 	}
-
-
+	
 	/**
 	 * This method is called every time the timer defined in the constructor
 	 * triggers.
@@ -205,7 +190,7 @@ public class GameCourt extends JPanel {
 	void tick() {
 		time ++;
 		times.setText("Time: " + time + " vel_x " + ball.v_x + " vel_y " + ball.v_y); 
-
+		
 		if (playing) {
 			// advance the bar and ball in their
 			// current direction.
@@ -215,10 +200,12 @@ public class GameCourt extends JPanel {
 			// make the ball bounce off walls...
 			ball.bounce(ball.hitWall());
 			//make the ball bounce off bar
-			if(ball.intersects(bar)){
+			if(ball.willIntersect(bar)){
 				ball.bounce(ball.hitObj(bar));
 			}
-
+			
+			
+			
 			for(int r = 0; r < blocks.length; r++){
 				for(int c = 0; c< blocks[0].length; c++ ){
 					Blocks check = blocks[r][c]; 
@@ -236,16 +223,16 @@ public class GameCourt extends JPanel {
 							check.setHit(false); 
 							num_score = hitBlocks.size()*100; 
 							score.setText("Score: " + num_score); 
-
+							
 						}
 					}
 				}
 			}
-
-			/*	if(time%200 == 0){
+			
+		/*	if(time%200 == 0){
 				//ball.setSpeed(true);
 			}*/
-
+			
 			if(time%300 == 0){
 				for(int r = 0; r<blocks.length; r++){
 					for(int c = 0; c<blocks[0].length; c++){
@@ -254,11 +241,12 @@ public class GameCourt extends JPanel {
 					}
 				}
 			}
-
+			
 			//check for ending
-
-			if(hitBlocks.size() == 10){
-				newGame(); 
+			
+			if(hitBlocks.size() == num_blocks){
+				playing = false; 
+				status.setText("YOU WIN!"); 
 			}
 
 			if(ball.pos_y == ball.max_y) {
@@ -277,7 +265,7 @@ public class GameCourt extends JPanel {
 					ball = new Circle(COURT_WIDTH, COURT_HEIGHT);
 				}	
 			}
-
+			
 			for(int r = 0; r < blocks.length; r++){
 				for(int c = 0; c < blocks[0].length; c++)
 					if(blocks[r][c]!= null && blocks[r][c].pos_y >= blocks[r][c].max_y){
@@ -285,34 +273,35 @@ public class GameCourt extends JPanel {
 						status.setText("Game Over!");
 					}
 			}
-
+			
 			// update the display
 			repaint();
 		}
 	}
 
-
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if(playing){
-			ball.draw(g);
+		ball.draw(g);
 		}
 		bar.draw(g); 
+
 		for(int i = 0; i < blocks.length; i++){
 			for(int j = 0; j < blocks[0].length ; j++){
 				Blocks check = blocks[i][j]; 
 				if(check != null){
 					if(check.hasHit() == false){
-						check.draw(g);
-						if(j%2 == 0 && i%2 == 0){check.setColors(g, Color.red);}
-						else if(j%2 != 0 && i%2 != 0){check.setColors(g,Color.red);}
-						else if(j%2 != 0 && i%2 == 0){check.setColors(g, Color.blue);}
-						else{check.setColors(g, Color.blue);}
+					check.draw(g);
+					if(j%2 == 0 && i%2 == 0){check.setColors(g, Color.red);}
+					else if(j%2 != 0 && i%2 != 0){check.setColors(g,Color.red);}
+					else if(j%2 != 0 && i%2 == 0){check.setColors(g, Color.blue);}
+					else{check.setColors(g, Color.blue);}
 					}
 				}
 			}
 		}
+		
 	}
 
 	@Override

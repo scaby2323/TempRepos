@@ -8,6 +8,8 @@ public class ReadLevels {
 	
 	public ReadLevels(String file_path){
 		level = file_path; 
+		System.out.println("HI");
+
 	}
 	
 	public String[] OpenFile() throws IOException{

@@ -26,20 +26,21 @@ public class LevelScanner {
 			String[] level_num = level_info[0].split(":");
 			String num = level_num[0]; 
 			key = 0; 
-			 for(int j = 0; j < num.length(); j++){
+			//find number of level
+			for(int j = 0; j < num.length(); j++){
 				 key += num.charAt(0) + 10^i; 
 			 }
 			 
+			//make ArrayList of the information for each row of the board
 			 for (int j = 1; j < level_info.length; j++){
 				 value.add(level_info[i]); 
 			 }	
-			if(!levels.containsKey(key)){
+			 if(!levels.containsKey(key)){
 				levels.put(key, value);
 			}
 		}
 	}
 	
-	@SuppressWarnings("unchecked")
 	public ArrayList<String> getLevelInfo(int k){
 		if(levels.containsKey(key)){
 			return levels.get(k); 
