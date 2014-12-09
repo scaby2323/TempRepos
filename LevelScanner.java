@@ -18,7 +18,6 @@ public class LevelScanner {
 	public LevelScanner(String file_name) throws IOException{
 
 		ReadLevels r = new ReadLevels(file_name); 
-		System.out.println("HI");
 		file = r.OpenFile(); 		
 		
 		for (int i = 0; i < file.length; i++ ){

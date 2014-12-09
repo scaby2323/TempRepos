@@ -6,8 +6,8 @@ import java.awt.*;
 public class Rectangle extends GameObj {
 	
 	public static final int SIZE_Y = 30;
-	public static final int SIZE_X = 150; 
-	public static final int INIT_X = 215;
+	public static final int SIZE_X = 80; 
+	public static final int INIT_X = 380;
 	public static final int INIT_Y = 365;
 	public static final int INIT_VEL_X = 0;
 	public static final int INIT_VEL_Y = 0;

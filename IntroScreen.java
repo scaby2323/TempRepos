@@ -12,11 +12,6 @@ public class IntroScreen extends JPanel {
 	setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 	}
-	
-	public void start() {
-		Game game = new Game();
-		game.run(); 	
-	}
 
 	public void instructions() {
 		Instructions instruct = new Instructions(); 
@@ -25,6 +20,17 @@ public class IntroScreen extends JPanel {
 
 	public void quit() {
 		System.exit(0);
+	}
+
+	public void one_play() {
+		Game game = new Game();
+		game.run(); 	
+		
+	}
+
+	public void two_play() {
+		GameTwo game = new GameTwo(); 
+		game.run(); 
 	}
 	
 	

@@ -32,9 +32,10 @@ public class Game implements Runnable {
 		status_panel.add(score); 
 		final JLabel times = new JLabel("Time: 0"); 
 		status_panel.add(times); 
+		int play = 2; 
 
 		// Main playing area
-		final GameCourt court = new GameCourt(status, lives, score,times);
+		final GameCourt court = new GameCourt(status, lives, score,times, play);
 		frame.add(court, BorderLayout.CENTER);
 
 		// Reset button

@@ -14,10 +14,10 @@ import java.awt.*;
 public class Circle extends GameObj {
 
 	public static final int SIZE = 20;
-	public static final int INIT_POS_X = 170;
-	public static final int INIT_POS_Y = 170;
-	public static int INIT_VEL_X = 2;
-	public static int INIT_VEL_Y = 3;
+	public static final int INIT_POS_X = 410;
+	public static final int INIT_POS_Y = 345;
+	public static int INIT_VEL_X = 0;
+	public static int INIT_VEL_Y = 0;
 	
 
 	public Circle(int courtWidth, int courtHeight) {
@@ -25,13 +25,16 @@ public class Circle extends GameObj {
 				courtWidth, courtHeight);
 	}
 	
-
+	public void setV_X(int v){
+		INIT_VEL_X = v; 
+	}
 	
-
+	public void setV_Y(int v){
+		INIT_VEL_Y = v;
+	}
 	@Override
 	public void draw(Graphics g) {
 		g.setColor(Color.BLACK);
 		g.fillOval(pos_x, pos_y, width, height);
 	}
-
 }

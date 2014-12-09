@@ -26,20 +26,28 @@ public class IntroWindow implements Runnable{
 		final JPanel control_panel = new JPanel(); 
 		frame.add(control_panel, BorderLayout.PAGE_END); 
 		
-		final JButton start = new JButton("Start Game");
+		final JButton one_play = new JButton("One Player");
+		final JButton two_play = new JButton("Two Player"); 
 		final JButton instructions = new  JButton("How To Play");
 		final JButton quit = new JButton("Quit"); 
 		
-		final IntroScreen screen = new IntroScreen(start, instructions, quit); 
+		final IntroScreen screen = new IntroScreen(one_play, instructions, quit); 
 		frame.add(screen, BorderLayout.CENTER); 
 			
 		
-		start.addActionListener(new ActionListener() {
+		one_play.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				screen.start(); 
+				screen.one_play(); 
 			}
 		}); 
-		control_panel.add(start); 
+		control_panel.add(one_play); 
+		
+		two_play.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				screen.two_play(); 
+			}
+		});
+		control_panel.add(two_play); 
 		
 		instructions.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
