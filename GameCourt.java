@@ -53,6 +53,9 @@ public class GameCourt extends JPanel{
 	
 	//create ArrayList of blocks that were hit
 	private ArrayList<Blocks> hitBlocks = new ArrayList<Blocks>(); 
+	private ArrayList<KeyEvent> keysPressed = new ArrayList<KeyEvent>(); 
+	private ArrayList<KeyEvent> keysPressedPlay = new ArrayList<KeyEvent>(); 
+
 	
 	public LevelScanner level_info;
 	
@@ -60,53 +63,38 @@ public class GameCourt extends JPanel{
 	private int num_score = 0; 
 	private int time = 0; 
 	private int time_final; 
-	private int level = 0; 
-	private int num_blocks = num_rows*num_cols; 
+	private int level = 1; 
+	private int num_blocks = 40; 
 	
 	private int space_pressed = 0; 
 	
-	/*public void getLevelInfo() throws IOException{
+	public void makeLevel() throws IOException{
 		level_info = new LevelScanner("Levels.txt");
-		ArrayList<String> info_list = level_info.getLevelInfo(level); 
-		num_rows = info_list.size(); 
-		String col_size = info_list.get(0); 
-		for (int c = 0; c < col_size.length(); c++){
-			if(col_size.charAt(c) == '.'){
-				num_cols++; 
-			}
-			else{
-				num_cols += (int)(col_size.charAt(c)); 
-			}
-		}
-		num_blocks = num_rows*num_cols; 
+		TreeMap<Integer, ArrayList<String>> info_map = level_info.getLevels();
 		blocks = new Blocks[num_rows][num_cols];
-		Iterator<String> iter = info_list.iterator(); 
-		while(iter.hasNext()){
-			String row = iter.next(); 
-			String[] row_info = row.split(" "); 
-			for(int r = 0; r<row_info.length; r++){
-				String check = row_info[r]; 
-				for(int c = 0; c<check.length(); c++){
-					if(check.charAt(c) == '.'){ 
-						blocks[r][c] = null;
-						num_cols++; 
-					}
-					else{
-						int k = (int)check.charAt(c); 
-						for(int i = c; i < k; i++){
-							int w = 80*(r); 
-							int h = 40*(i); 
-							temp = new Blocks(w, h, COURT_WIDTH, COURT_HEIGHT);
-							blocks[r][i] = temp; 
-							num_cols++;
-						}
-						c = k;
-					}
-				}
-			}
+		ArrayList<String> level_info_list = info_map.get(0);
+		for(int c = 0; c < level_info_list.size(); c++){
+			 String row = level_info_list.get(c); 
+			 for(int r = 0; r< row.length(); r++){
+				 if(row.charAt(r) == '.'){
+					 blocks[r][c] = null; 
+				 }
+				 else{
+					 int k =0; 
+					 while(row.charAt(r)!='.' && r < row.length()-1){
+						 k = k*10+((int)row.charAt(r)-48); 
+						 r++;
+					 }
+					 for(int l = r; l <= k; l++){
+						 int w = 80*l; 
+						 int h = 40*l;
+						 temp = new Blocks(w,h,COURT_WIDTH, COURT_HEIGHT); 
+						 blocks[l][c] = temp; 
+					 }
+				 }
+			 }
 		}
-	}*/
-	
+	}
 	
 	public GameCourt(JLabel status, JLabel lives, JLabel score, JLabel times, final int player) {
 		// creates border around the court area, JComponent method
@@ -126,7 +114,115 @@ public class GameCourt extends JPanel{
 		
 		timer.start(); // MAKE SURE TO START THE TIMER!
 		
-		addKeyListener(new KeyAdapter() {
+
+		addKeyListener(new KeyAdapter(){
+			public void keyPressed(KeyEvent e){
+				switch(e.getKeyCode()){
+				case KeyEvent.VK_SPACE: 
+					ball.v_x = 4; 
+					ball.v_y = -5; 
+					space_pressed = 1; 
+					break;
+				case KeyEvent.VK_RIGHT:
+				if(player == 2){
+					if(space_pressed == 0){
+						ball.v_x = BAR_VELOCITY; 
+						bar.v_x = BAR_VELOCITY; 
+					}
+					else{
+						bar.v_x = BAR_VELOCITY; 
+					}
+				}
+				break;
+				case KeyEvent.VK_LEFT:
+					if(player ==2 ){
+						if(space_pressed == 0){
+							ball.v_x = -BAR_VELOCITY; 
+							bar.v_x = -BAR_VELOCITY; 
+						}
+						else{
+							bar.v_x = -BAR_VELOCITY; 
+						}
+					}
+					break; 
+				case KeyEvent.VK_D:
+					 if(player == 1){
+						 if(space_pressed == 0){
+							 ball.v_x = BAR_VELOCITY; 
+							 bar.v_x = BAR_VELOCITY; 
+						 }
+						 else{
+							 bar.v_x = BAR_VELOCITY; 
+						 }
+					 }
+					 break;
+				case KeyEvent.VK_A: 
+					if(player == 1){
+						if(space_pressed == 0){
+							ball.v_x = -BAR_VELOCITY; 
+							bar.v_x = -BAR_VELOCITY; 
+						}
+						else{
+							bar.v_x = -BAR_VELOCITY; 
+						}
+					}
+					break;  
+				}
+			}
+			public void keyReleased(KeyEvent e){
+				if(space_pressed == 0){
+					ball.v_x = 0; 
+					bar.v_x = 0; 
+				}
+				else{
+					bar.v_x = 0; 
+				}
+			}
+		}); 
+		
+		/*else{
+			addKeyListener(new KeyAdapter(){
+				public void keyPressed(KeyEvent e){
+					keysPressedPlay.add(e); 
+				}
+				public void keyReleased(KeyEvent e){
+					keysPressedPlay.remove(e); 
+				}
+			}); 
+		}
+		
+		
+		Iterator<KeyEvent> iter = keysPressed.iterator(); 
+		while(iter.hasNext()){
+			KeyEvent e = iter.next(); 
+			if(e.getKeyCode() == KeyEvent.VK_SPACE){
+				System.out.println("here");
+				ball.v_x = 4; 
+				ball.v_y = 5; 
+				space_pressed = 1; 
+			}
+			else if(e.getKeyCode() == KeyEvent.VK_LEFT){
+				ball.v_x = -BAR_VELOCITY; 
+				bar.v_x = -BAR_VELOCITY; 
+			}
+			else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+				ball.v_x = BAR_VELOCITY; 
+				bar.v_x = BAR_VELOCITY; 
+			}
+		}
+		
+		Iterator<KeyEvent> iterPlay = keysPressedPlay.iterator(); 
+		while(iterPlay.hasNext()){
+			KeyEvent e = iterPlay.next(); 
+			if(e.getKeyCode() == KeyEvent.VK_LEFT){
+				bar.v_x = -BAR_VELOCITY; 
+			}
+			else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
+				bar.v_x = BAR_VELOCITY; 
+			}
+		}
+		*/
+/*		addKeyListener(new KeyAdapter() {
 			public void keyPressed(KeyEvent e){
 				System.out.println(space_pressed);
 				//if spacebar is pressed start the game
@@ -178,7 +274,7 @@ public class GameCourt extends JPanel{
 				}			
 			}	
 		}); 
-
+*/
 		
 
 		// Enable keyboard focus on the court area.
@@ -214,20 +310,22 @@ public class GameCourt extends JPanel{
 		num_score = 0; 
 		time = 0; 
 		
-/*		try {
-			getLevelInfo();
+		try {
+			makeLevel();
+			level++;
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
-		} */
+		} 
 	
 		
 		for(int i = 0; i < blocks.length; i++){
 			for(int j = 0; j <  blocks[0].length; j++){
-				int w = 80*(i); 
-				int h = 40*(j); 
-				temp = new Blocks(w, h, COURT_WIDTH, COURT_HEIGHT);
-				blocks[i][j] = temp; 
+				if(blocks[i][j]!= null){
+					int w = 80*(i); 
+					int h = 40*(j); 
+					temp = new Blocks(w, h, COURT_WIDTH, COURT_HEIGHT);
+					blocks[i][j] = temp; 
+				}
 			}
 		}
 	
@@ -264,7 +362,6 @@ public class GameCourt extends JPanel{
 			ball.bounce(ball.hitWall());
 			//make the ball bounce off bar
 			if(ball.willIntersect(bar)){
-				System.out.println("bat");
 				ball.bounce(ball.hitObj(bar));
 			}
 			
@@ -273,14 +370,13 @@ public class GameCourt extends JPanel{
 					Blocks check = blocks[r][c]; 
 					if(check!=null){
 						if(ball.willIntersect(check)){
-							System.out.println("block");
 							ball.bounce(ball.hitObj(check)); 
 							check.setHit(true);
 							hitBlocks.add(check); 
 							blocks[r][c] = null; 
 							num_score = hitBlocks.size()*100;
 							score.setText("Score: " + num_score);
-							}
+						}
 						else{
 							check.setHit(false); 
 							num_score = hitBlocks.size()*100; 
@@ -310,7 +406,7 @@ public class GameCourt extends JPanel{
 				newGame();  
 			}
 			
-			if(ball.pos_y >= (ball.max_y - ball.width)) {
+			if(ball.pos_y >= ball.max_y) {
 				num_lives--; 
 				space_pressed = 0; 
 				if(num_lives == 0){

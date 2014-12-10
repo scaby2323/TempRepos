@@ -19,34 +19,24 @@ public class LevelScanner {
 
 		ReadLevels r = new ReadLevels(file_name); 
 		file = r.OpenFile(); 		
-		
-		for (int i = 0; i < file.length; i++ ){
-			String[] level_info = file[i].split(" "); 
-			String[] level_num = level_info[0].split(":");
-			String num = level_num[0]; 
-			key = 0; 
-			//find number of level
-			for(int j = 0; j < num.length(); j++){
-				 key += num.charAt(0) + 10^i; 
-			 }
-			 
+		for (int i = 0; i < file.length-1; i++ ){
+			String[] level_info = file[i].split(" ");
+			String level_num = level_info[0];
+			char num = level_num.charAt(0); 
+			//number of level
+			key = (int)num-48; 
 			//make ArrayList of the information for each row of the board
-			 for (int j = 1; j < level_info.length; j++){
-				 value.add(level_info[i]); 
-			 }	
-			 if(!levels.containsKey(key)){
-				levels.put(key, value);
+			// <Level #, block orientation>
+			value = new ArrayList<String>(); 
+			for(int l = 1; l<level_info.length; l++){
+				value.add(level_info[l]); 
 			}
-		}
+			levels.put(i, value);	
+		}				
 	}
 	
-	public ArrayList<String> getLevelInfo(int k){
-		if(levels.containsKey(key)){
-			return levels.get(k); 
-		}
-		else{
-			return (ArrayList<String>) Collections.EMPTY_LIST; 
-		}
+	public TreeMap<Integer, ArrayList<String>> getLevels(){
+		return levels; 
 	}
 }
 	

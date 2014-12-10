@@ -8,7 +8,6 @@ public class ReadLevels {
 	
 	public ReadLevels(String file_path){
 		level = file_path; 
-		System.out.println("HI");
 
 	}
 	
@@ -16,10 +15,8 @@ public class ReadLevels {
 	
 		FileReader fr = new FileReader(level); 
 		BufferedReader br = new BufferedReader(fr); 
-		System.out.println("YO");
 		int num_lines = getNumLines(); 
 		String[] file = new String[num_lines]; 
-		
 		for(int i = 0; i < file.length; i++){
 			file[i] = br.readLine(); 
 		}
@@ -37,9 +34,7 @@ public class ReadLevels {
 		while((line = br.readLine()) != null){
 			num_lines++; 
 		}
-		br.close(); 
-		//System.out.println(num_lines);
-		
+		br.close(); 		
 		return num_lines; 
 	}
 

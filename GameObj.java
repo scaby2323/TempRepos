@@ -98,12 +98,6 @@ public class GameObj {
 	 * @return whether this object intersects the other object.
 	 */
 	public boolean intersects(GameObj obj){	
-		/*System.out.println("intersects = " + (pos_x + width >= obj.pos_x
-				&& pos_y + height >= obj.pos_y
-				&& obj.pos_x + obj.width >= pos_x 
-				&& obj.pos_y + obj.height >= pos_y));*/
-		System.out.println("pos_x = " + pos_x + " pos_y " + pos_y + " obj.pos_x = " + obj.pos_x + " obj.pos_y = " + obj.pos_y + 
-		" p_w = " + width + " p_h " + height + " o_w = " + obj.width + " o_h = " + obj.height);
 		return (pos_x + width +20 >= obj.pos_x
 				&& pos_y + height >= obj.pos_y
 				&& obj.pos_x + obj.width + 20 >= pos_x 
@@ -127,12 +121,7 @@ public class GameObj {
 		int next_y = pos_y + v_y;
 		int next_obj_x = obj.pos_x + obj.v_x;
 		int next_obj_y = obj.pos_y + obj.v_y;
-		/*System.out.println("*******WILL INTERSECT" + (next_x + width >= next_obj_x
-				&& next_y + height >= next_obj_y
-				&& next_obj_x + obj.width >= next_x 
-				&& next_obj_y + obj.height >= next_y));
-		System.out.println("pos_x = " + pos_x + " pos_y " + pos_y + " obj.pos_x = " + obj.pos_x + " obj.pos_y = " + obj.pos_y);
-		*/return (next_x + width >= next_obj_x
+		return (next_x + width >= next_obj_x
 				&& next_y + height >= next_obj_y
 				&& next_obj_x + obj.width >= next_x 
 				&& next_obj_y + obj.height >= next_y);
