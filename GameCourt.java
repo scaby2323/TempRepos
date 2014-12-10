@@ -49,7 +49,7 @@ public class GameCourt extends JPanel{
 	private int num_rows = 4; 
 	private int num_cols = 10;
 	//create array to draw blocks
-	private Blocks [][] blocks = new Blocks[num_cols][num_rows];
+	private Blocks [][] blocks;
 	
 	//create ArrayList of blocks that were hit
 	private ArrayList<Blocks> hitBlocks = new ArrayList<Blocks>(); 
@@ -63,34 +63,32 @@ public class GameCourt extends JPanel{
 	private int num_score = 0; 
 	private int time = 0; 
 	private int time_final; 
-	private int level = 1; 
-	private int num_blocks = 40; 
+	private int level = 0; 
+	private int num_blocks = 0; 
+	
+	 
 	
 	private int space_pressed = 0; 
 	
-	public void makeLevel() throws IOException{
+	public void makeLevel(int l) throws IOException{
+		System.out.println("level = " + level);
 		level_info = new LevelScanner("Levels.txt");
+		blocks = new Blocks[10][4]; 
 		TreeMap<Integer, ArrayList<String>> info_map = level_info.getLevels();
-		blocks = new Blocks[num_rows][num_cols];
-		ArrayList<String> level_info_list = info_map.get(0);
+		ArrayList<String> level_info_list = info_map.get(l);
+		System.out.println(level_info_list);
 		for(int c = 0; c < level_info_list.size(); c++){
-			 String row = level_info_list.get(c); 
+			 String row = level_info_list.get(c);
 			 for(int r = 0; r< row.length(); r++){
-				 if(row.charAt(r) == '.'){
+				 if(row.charAt(r) == 'e'){
 					 blocks[r][c] = null; 
 				 }
 				 else{
-					 int k =0; 
-					 while(row.charAt(r)!='.' && r < row.length()-1){
-						 k = k*10+((int)row.charAt(r)-48); 
-						 r++;
-					 }
-					 for(int l = r; l <= k; l++){
-						 int w = 80*l; 
-						 int h = 40*l;
-						 temp = new Blocks(w,h,COURT_WIDTH, COURT_HEIGHT); 
-						 blocks[l][c] = temp; 
-					 }
+					 int w = 80*r; 
+					 int h = 40*r; 
+					 temp = new Blocks(w,h,COURT_WIDTH, COURT_HEIGHT); 
+					 blocks[r][c] = temp;
+					 num_blocks++; 
 				 }
 			 }
 		}
@@ -311,8 +309,7 @@ public class GameCourt extends JPanel{
 		time = 0; 
 		
 		try {
-			makeLevel();
-			level++;
+			makeLevel(level); 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
@@ -333,13 +330,30 @@ public class GameCourt extends JPanel{
 		playing = true;
 		status.setText("Playing...");
 		lives.setText("Lives: " + num_lives); 
-		score.setText("Score: " + num_score); 
+		score.setText("Score: " + num_score + " Level: " + level + " Blocks Hit: " + hitBlocks.size()); 
 		times.setText("Time: " + times);
 
 		// Make sure that this component has the keyboard focus
 		requestFocusInWindow();
 	}
 
+	public void nextLevel(){
+		level++; 
+		ball = new Circle(COURT_WIDTH, COURT_HEIGHT); 
+		bar = new Rectangle(COURT_WIDTH, COURT_HEIGHT);
+		hitBlocks = new ArrayList<Blocks>();
+		status.setText("Playing...");
+		lives.setText("Lives: " + num_lives); 
+		score.setText("Score: " + num_score + " Level: " + level + " Blocks Hit: " + hitBlocks.size()); 
+		times.setText("Time: " + times);
+		System.out.println("level = = = " + level);
+		try {
+			makeLevel(level);
+		} catch (IOException e) {
+			e.printStackTrace();
+		} 
+	}
+	
 	public void quit() {
 		System.exit(0);		
 	}
@@ -375,20 +389,20 @@ public class GameCourt extends JPanel{
 							hitBlocks.add(check); 
 							blocks[r][c] = null; 
 							num_score = hitBlocks.size()*100;
-							score.setText("Score: " + num_score);
+							score.setText("Score: " + num_score + " Level: " + level + " Blocks Hit: " + hitBlocks.size());
 						}
 						else{
 							check.setHit(false); 
 							num_score = hitBlocks.size()*100; 
-							score.setText("Score: " + num_score); 
+							score.setText("Score: " + num_score + " Level: " + level + " Blocks Hit: " + hitBlocks.size()); 
 						}
 					}
 				}
 			}
 			
-		/*	if(time%200 == 0){
-				//ball.setSpeed(true);
-			}*/
+			if(time%200 == 0 && space_pressed == 1){
+				ball.setSpeed(true);
+			}
 			
 			if(time%500 == 0){
 				for(int r = 0; r<blocks.length; r++){
@@ -402,8 +416,16 @@ public class GameCourt extends JPanel{
 			//check for ending
 			
 			if(hitBlocks.size() == num_blocks){
-				level++; 
-				newGame();  
+				if(level <4){
+					nextLevel(); 
+				}
+				else{
+					playing = false;
+					status.setText("YOU WON!!! :)"); 
+					score.setText("Final Score: " + num_score);
+					
+					
+				}
 			}
 			
 			if(ball.pos_y >= ball.max_y) {
@@ -421,7 +443,8 @@ public class GameCourt extends JPanel{
 					playing = true; 
 					status.setText("Lost a life :(");
 					lives.setText("Lives: " + num_lives); 
-					score.setText("Score: " + num_score);
+					score.setText("Score: " + num_score + " Level: " +
+					level + " Blocks Hit: " + hitBlocks.size());
 					ball = new Circle(COURT_WIDTH, COURT_HEIGHT);
 					bar = new Rectangle(COURT_WIDTH, COURT_HEIGHT); 
 				}	
@@ -448,6 +471,7 @@ public class GameCourt extends JPanel{
 		bar = new Rectangle(COURT_WIDTH, COURT_HEIGHT);
 		time = 0; 
 		space_pressed = 0; 
+		level = 0; 
 		for(int i = 0; i < blocks.length; i++){
 			for(int j = 0; j <  blocks[0].length; j++){
 				int w = 80*(i); 

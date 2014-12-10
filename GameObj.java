@@ -194,7 +194,7 @@ public class GameObj {
 
 	}
 	
-	/*public void setSpeed(boolean increase){
+	public void setSpeed(boolean increase){
 		if(increase){
 			if(v_x < 0){ v_x--; 
 			}
@@ -210,7 +210,7 @@ public class GameObj {
 			v_y = 5; 
 		}
 	}
-	*/
+	
 	public void moveDown(){
 		if(pos_y - 20 < max_y)
 			pos_y += 20; 

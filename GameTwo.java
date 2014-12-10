@@ -20,7 +20,7 @@ public class GameTwo implements Runnable {
 		status_panel.add(times); 
 		
 		final GameCourt court1 = new GameCourt(status, lives, score,times, 1);
-		frame.add(court1, BorderLayout.WEST);
+		frame.add(court1, BorderLayout.NORTH);
 		
 		final JLabel status2 = new JLabel("");
 		status_panel.add(status2);
@@ -32,7 +32,7 @@ public class GameTwo implements Runnable {
 		status_panel.add(times2); 
 		
 		final GameCourt court2 = new GameCourt(status2, lives2, score2, times2, 2); 
-		frame.add(court2, BorderLayout.EAST); 
+		frame.add(court2, BorderLayout.SOUTH); 
 		
 		// Put the frame on the screen
 		frame.pack();
@@ -40,7 +40,7 @@ public class GameTwo implements Runnable {
 		frame.setVisible(true); 
 
 		final JPanel control_panel = new JPanel();
-		frame.add(control_panel, BorderLayout.NORTH);
+		frame.add(control_panel, BorderLayout.EAST);
 		
 		final JButton reset = new JButton("New Game");
 		final JButton quit = new JButton("Quit"); 
