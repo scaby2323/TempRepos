@@ -11,7 +11,6 @@ import java.io.IOException;
 import javax.swing.*;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.TreeMap;
 
 
@@ -31,7 +30,7 @@ public class GameCourt extends JPanel{
 	private Circle ball; // the Black ball, bounces
 	private Rectangle bar;// the Black Rectangle, keyboard control
 	private Blocks temp; 
-	
+
 	public boolean playing = false; // whether the game is running
 	private JLabel status; // Current status text (i.e. Running...)
 	private JLabel lives; // Current number of lives
@@ -42,77 +41,58 @@ public class GameCourt extends JPanel{
 	public static int COURT_WIDTH = 800;
 	public static int COURT_HEIGHT = 400;
 	public static final int BAR_VELOCITY = 20;
-	
+
 	// Update interval for timer, in milliseconds
 	public static final int INTERVAL = 35;
-	
-	private int num_rows = 4; 
-	private int num_cols = 10;
+
 	//create array to draw blocks
 	private Blocks [][] blocks;
-	
+
 	//create ArrayList of blocks that were hit
 	private ArrayList<Blocks> hitBlocks = new ArrayList<Blocks>(); 
-	private ArrayList<KeyEvent> keysPressed = new ArrayList<KeyEvent>(); 
-	private ArrayList<KeyEvent> keysPressedPlay = new ArrayList<KeyEvent>(); 
 
-	
 	public LevelScanner level_info;
-	
+
 	private int num_lives = 3; 
 	private int num_score = 0; 
 	private int time = 0; 
-	private int time_final; 
-	private int level = 0; 
+	private int level = 0;  
 	private int num_blocks = 0; 
-	
-	 
-	
 	private int space_pressed = 0; 
-	
+
 	public void makeLevel(int l) throws IOException{
-		System.out.println("level = " + level);
 		level_info = new LevelScanner("Levels.txt");
 		blocks = new Blocks[10][4]; 
 		TreeMap<Integer, ArrayList<String>> info_map = level_info.getLevels();
 		ArrayList<String> level_info_list = info_map.get(l);
-		System.out.println(level_info_list);
 		for(int c = 0; c < level_info_list.size(); c++){
-			 String row = level_info_list.get(c);
-			 for(int r = 0; r< row.length(); r++){
-				 if(row.charAt(r) == 'e'){
-					 blocks[r][c] = null; 
-				 }
-				 else{
-					 int w = 80*r; 
-					 int h = 40*r; 
-					 temp = new Blocks(w,h,COURT_WIDTH, COURT_HEIGHT); 
-					 blocks[r][c] = temp;
-					 num_blocks++; 
-				 }
-			 }
+			int y = 40*c; 
+			String row = level_info_list.get(c);
+			for(int r = 0; r< row.length(); r++){
+				if(row.charAt(r) == 'e'){
+					blocks[r][c] = null; 
+				}
+				else{
+					int x = 80*r; 
+					temp = new Blocks(x,y,COURT_WIDTH, COURT_HEIGHT); 
+					blocks[r][c] = temp;
+					num_blocks++; 
+				}
+			}
 		}
 	}
-	
-	public GameCourt(JLabel status, JLabel lives, JLabel score, JLabel times, final int player) {
-		// creates border around the court area, JComponent method
+
+	public GameCourt(JLabel status, JLabel lives, JLabel score, JLabel times) {
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
-		// The timer is an object which triggers an action periodically
-		// with the given INTERVAL. One registers an ActionListener with
-		// this timer, whose actionPerformed() method will be called
-		// each time the timer triggers. We define a helper method
-		// called tick() that actually does everything that should
-		// be done in a single timestep.
 		final Timer timer = new Timer(INTERVAL, new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				tick();
 			}
 		});
-		
-		timer.start(); // MAKE SURE TO START THE TIMER!
-		
 
+		timer.start(); 
+		
 		addKeyListener(new KeyAdapter(){
 			public void keyPressed(KeyEvent e){
 				switch(e.getKeyCode()){
@@ -122,7 +102,6 @@ public class GameCourt extends JPanel{
 					space_pressed = 1; 
 					break;
 				case KeyEvent.VK_RIGHT:
-				if(player == 2){
 					if(space_pressed == 0){
 						ball.v_x = BAR_VELOCITY; 
 						bar.v_x = BAR_VELOCITY; 
@@ -130,10 +109,8 @@ public class GameCourt extends JPanel{
 					else{
 						bar.v_x = BAR_VELOCITY; 
 					}
-				}
-				break;
+					break;
 				case KeyEvent.VK_LEFT:
-					if(player ==2 ){
 						if(space_pressed == 0){
 							ball.v_x = -BAR_VELOCITY; 
 							bar.v_x = -BAR_VELOCITY; 
@@ -141,30 +118,7 @@ public class GameCourt extends JPanel{
 						else{
 							bar.v_x = -BAR_VELOCITY; 
 						}
-					}
 					break; 
-				case KeyEvent.VK_D:
-					 if(player == 1){
-						 if(space_pressed == 0){
-							 ball.v_x = BAR_VELOCITY; 
-							 bar.v_x = BAR_VELOCITY; 
-						 }
-						 else{
-							 bar.v_x = BAR_VELOCITY; 
-						 }
-					 }
-					 break;
-				case KeyEvent.VK_A: 
-					if(player == 1){
-						if(space_pressed == 0){
-							ball.v_x = -BAR_VELOCITY; 
-							bar.v_x = -BAR_VELOCITY; 
-						}
-						else{
-							bar.v_x = -BAR_VELOCITY; 
-						}
-					}
-					break;  
 				}
 			}
 			public void keyReleased(KeyEvent e){
@@ -177,118 +131,11 @@ public class GameCourt extends JPanel{
 				}
 			}
 		}); 
-		
-		/*else{
-			addKeyListener(new KeyAdapter(){
-				public void keyPressed(KeyEvent e){
-					keysPressedPlay.add(e); 
-				}
-				public void keyReleased(KeyEvent e){
-					keysPressedPlay.remove(e); 
-				}
-			}); 
-		}
-		
-		
-		Iterator<KeyEvent> iter = keysPressed.iterator(); 
-		while(iter.hasNext()){
-			KeyEvent e = iter.next(); 
-			if(e.getKeyCode() == KeyEvent.VK_SPACE){
-				System.out.println("here");
-				ball.v_x = 4; 
-				ball.v_y = 5; 
-				space_pressed = 1; 
-			}
-			else if(e.getKeyCode() == KeyEvent.VK_LEFT){
-				ball.v_x = -BAR_VELOCITY; 
-				bar.v_x = -BAR_VELOCITY; 
-			}
-			else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-				ball.v_x = BAR_VELOCITY; 
-				bar.v_x = BAR_VELOCITY; 
-			}
-		}
-		
-		Iterator<KeyEvent> iterPlay = keysPressedPlay.iterator(); 
-		while(iterPlay.hasNext()){
-			KeyEvent e = iterPlay.next(); 
-			if(e.getKeyCode() == KeyEvent.VK_LEFT){
-				bar.v_x = -BAR_VELOCITY; 
-			}
-			else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-				bar.v_x = BAR_VELOCITY; 
-			}
-		}
-		*/
-/*		addKeyListener(new KeyAdapter() {
-			public void keyPressed(KeyEvent e){
-				System.out.println(space_pressed);
-				//if spacebar is pressed start the game
-				if(e.getKeyCode() == KeyEvent.VK_SPACE && space_pressed == 0){
-					ball.v_x = 4; 
-					ball.v_y = -5; 
-					space_pressed = 1; 
-					//listen to rest of the pressed keys
-					addKeyListener(new KeyAdapter() {
-						public void keyPressed(KeyEvent e){
-							if(player == 1){
-								if(e.getKeyCode() == KeyEvent.VK_A){
-									bar.v_x = -BAR_VELOCITY;
-								}
-								else if(e.getKeyCode() == KeyEvent.VK_D){
-									bar.v_x = BAR_VELOCITY; 
-								}
-							}
-							else if(player == 2){
-								if(e.getKeyCode() == KeyEvent.VK_LEFT){
-									bar.v_x = -BAR_VELOCITY; 
-								}
-								else if(e.getKeyCode() == KeyEvent.VK_RIGHT){
-									bar.v_x = BAR_VELOCITY; 
-								}
-							}
-						}
-						public void keyReleased(KeyEvent e){
-							bar.v_x = 0; 
-							bar.v_y = 0; 
-						}	
-					});
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_LEFT && space_pressed == 0){
-					bar.v_x = -BAR_VELOCITY; 
-					ball.v_x = -BAR_VELOCITY; 
-				}
-				else if(e.getKeyCode() == KeyEvent.VK_RIGHT && space_pressed == 0){
-					bar.v_x = BAR_VELOCITY; 
-					ball.v_x = BAR_VELOCITY; 
-				}	
-			}
-			public void keyReleased(KeyEvent e){
-				if(space_pressed == 0){
-					bar.v_x = 0; 
-					bar.v_y = 0; 
-					ball.v_x = 0; 
-					ball.v_y = 0;
-				}			
-			}	
-		}); 
-*/
-		
 
-		// Enable keyboard focus on the court area.
-		// When this component has the keyboard focus, key
-		// events will be handled by its key listener.
 		setFocusable(true);
 
-		// This key listener allows the bar to move as long
-		// as an arrow key is pressed, by changing the bar's
-		// velocity accordingly. (The tick method below actually
-		// moves the bar.)
-
-			COURT_WIDTH = 800;
-			COURT_HEIGHT = 400;
-
-		
+		COURT_WIDTH = 800;
+		COURT_HEIGHT = 400;
 
 		this.status = status;
 		this.lives = lives; 
@@ -296,9 +143,6 @@ public class GameCourt extends JPanel{
 		this.times = times; 
 	}
 
-	/**
-	 * (Re-)set the game to its initial state.
-	 */
 	public void reset() {
 
 		ball = new Circle(COURT_WIDTH, COURT_HEIGHT);
@@ -307,33 +151,22 @@ public class GameCourt extends JPanel{
 		num_lives = 3; 
 		num_score = 0; 
 		time = 0; 
-		
+		space_pressed = 0; 
+		level = 0; 
+
 		try {
 			makeLevel(level); 
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
-	
-		
-		for(int i = 0; i < blocks.length; i++){
-			for(int j = 0; j <  blocks[0].length; j++){
-				if(blocks[i][j]!= null){
-					int w = 80*(i); 
-					int h = 40*(j); 
-					temp = new Blocks(w, h, COURT_WIDTH, COURT_HEIGHT);
-					blocks[i][j] = temp; 
-				}
-			}
-		}
-	
-		
+
 		playing = true;
 		status.setText("Playing...");
 		lives.setText("Lives: " + num_lives); 
-		score.setText("Score: " + num_score + " Level: " + level + " Blocks Hit: " + hitBlocks.size()); 
+		score.setText("Score: " + num_score + " Level: " + level + 
+				" Blocks Hit: " + hitBlocks.size() + " out of " + num_blocks); 
 		times.setText("Time: " + times);
 
-		// Make sure that this component has the keyboard focus
 		requestFocusInWindow();
 	}
 
@@ -342,33 +175,35 @@ public class GameCourt extends JPanel{
 		ball = new Circle(COURT_WIDTH, COURT_HEIGHT); 
 		bar = new Rectangle(COURT_WIDTH, COURT_HEIGHT);
 		hitBlocks = new ArrayList<Blocks>();
-		status.setText("Playing...");
-		lives.setText("Lives: " + num_lives); 
-		score.setText("Score: " + num_score + " Level: " + level + " Blocks Hit: " + hitBlocks.size()); 
-		times.setText("Time: " + times);
-		System.out.println("level = = = " + level);
+		num_blocks = 0 ;
+		space_pressed = 0; 
+		
 		try {
 			makeLevel(level);
 		} catch (IOException e) {
 			e.printStackTrace();
 		} 
+		
+		playing = true; 
+		status.setText("Playing...");
+		lives.setText("Lives: " + num_lives); 
+		score.setText("Score: " + num_score + " Level: " + level + " Blocks Hit: " + hitBlocks.size()  + " out of " + num_blocks); 
+		times.setText("Time: " + times);
+		
+		requestFocusInWindow(); 
+
 	}
-	
+
 	public void quit() {
+		playing = false; 
 		System.exit(0);		
 	}
-	
-	/**
-	 * This method is called every time the timer defined in the constructor
-	 * triggers.
-	 */
+
 	void tick() {
 		time ++;
 		times.setText("Time: " + time); 
-		
+
 		if (playing) {
-			// advance the bar and ball in their
-			// current direction.
 			bar.move();
 			ball.move();
 
@@ -378,7 +213,7 @@ public class GameCourt extends JPanel{
 			if(ball.willIntersect(bar)){
 				ball.bounce(ball.hitObj(bar));
 			}
-			
+
 			for(int r = 0; r < blocks.length; r++){
 				for(int c = 0; c< blocks[0].length; c++ ){
 					Blocks check = blocks[r][c]; 
@@ -389,21 +224,23 @@ public class GameCourt extends JPanel{
 							hitBlocks.add(check); 
 							blocks[r][c] = null; 
 							num_score = hitBlocks.size()*100;
-							score.setText("Score: " + num_score + " Level: " + level + " Blocks Hit: " + hitBlocks.size());
+							score.setText("Score: " + num_score + " Level: " +
+							level + " Blocks Hit: " + hitBlocks.size()  + " out of " + num_blocks);
 						}
 						else{
 							check.setHit(false); 
 							num_score = hitBlocks.size()*100; 
-							score.setText("Score: " + num_score + " Level: " + level + " Blocks Hit: " + hitBlocks.size()); 
+							score.setText("Score: " + num_score + " Level: " + 
+							level + " Blocks Hit: " + hitBlocks.size() + " out of " + num_blocks); 
 						}
 					}
 				}
 			}
-			
-			if(time%200 == 0 && space_pressed == 1){
+
+			/*if(time%200 == 0 && space_pressed == 1){
 				ball.setSpeed(true);
 			}
-			
+*/
 			if(time%500 == 0){
 				for(int r = 0; r<blocks.length; r++){
 					for(int c = 0; c<blocks[0].length; c++){
@@ -412,73 +249,49 @@ public class GameCourt extends JPanel{
 					}
 				}
 			}
+
 			
 			//check for ending
-			
 			if(hitBlocks.size() == num_blocks){
-				if(level <4){
+				if(level < 5){
 					nextLevel(); 
 				}
 				else{
 					playing = false;
 					status.setText("YOU WON!!! :)"); 
 					score.setText("Final Score: " + num_score);
-					
-					
 				}
 			}
-			
 			if(ball.pos_y >= ball.max_y) {
 				num_lives--; 
 				space_pressed = 0; 
 				if(num_lives == 0){
 					playing = false; 
-					time_final = time; 
 					status.setText("GAME OVER!"); 
 					score.setText("Final Score: " + num_score); 
 					lives.setText("Lives: " + num_lives); 
-					times.setText("Time: " + time_final); 
 				}
 				else{
 					playing = true; 
 					status.setText("Lost a life :(");
 					lives.setText("Lives: " + num_lives); 
 					score.setText("Score: " + num_score + " Level: " +
-					level + " Blocks Hit: " + hitBlocks.size());
+							level + " Blocks Hit: " + hitBlocks.size());
 					ball = new Circle(COURT_WIDTH, COURT_HEIGHT);
 					bar = new Rectangle(COURT_WIDTH, COURT_HEIGHT); 
 				}	
 			}
-			
 			for(int r = 0; r < blocks.length; r++){
 				for(int c = 0; c < blocks[0].length; c++){
 					if(blocks[r][c]!= null && blocks[r][c].pos_y >= blocks[r][c].max_y){
 						playing = false; 
-						time_final = time; 
 						status.setText("Game Over!");
-						times.setText("Time: " + time_final); 
+						score.setText("Score: " + num_score + " Level: " + level 
+								+ " Blocks Hit: " + hitBlocks.size()); 
 					}
 				}
 			}		
-			// update the display
 			repaint();
-		}
-	}
-	
-	public void newGame(){
-		hitBlocks = new ArrayList<Blocks>();
-		ball = new Circle(COURT_WIDTH, COURT_HEIGHT); 
-		bar = new Rectangle(COURT_WIDTH, COURT_HEIGHT);
-		time = 0; 
-		space_pressed = 0; 
-		level = 0; 
-		for(int i = 0; i < blocks.length; i++){
-			for(int j = 0; j <  blocks[0].length; j++){
-				int w = 80*(i); 
-				int h = 40*(j); 
-				temp = new Blocks(w, h, COURT_WIDTH, COURT_HEIGHT);
-				blocks[i][j] = temp;
-			}
 		}
 	}
 
@@ -486,25 +299,28 @@ public class GameCourt extends JPanel{
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		if(playing){
-		ball.draw(g);
+			ball.draw(g);
 		}
 		bar.draw(g); 
-
+		
+		
 		for(int i = 0; i < blocks.length; i++){
 			for(int j = 0; j < blocks[0].length ; j++){
 				Blocks check = blocks[i][j]; 
 				if(check != null){
+					System.out.print("not null   ");
 					if(check.hasHit() == false){
-					check.draw(g);
-					if(j%2 == 0 && i%2 == 0){check.setColors(g, Color.red);}
-					else if(j%2 != 0 && i%2 != 0){check.setColors(g,Color.red);}
-					else if(j%2 != 0 && i%2 == 0){check.setColors(g, Color.blue);}
-					else{check.setColors(g, Color.blue);}
+						System.out.println(check.pos_x + "   " + check.pos_y);
+						System.out.println("r = " + i + " c = " + j + " wasnt hit");
+						check.draw(g);
+						if(j%2 == 0 && i%2 == 0){check.setColors(g, Color.red);}
+						else if(j%2 != 0 && i%2 != 0){check.setColors(g,Color.red);}
+						else if(j%2 != 0 && i%2 == 0){check.setColors(g, Color.blue);}
+						else{check.setColors(g, Color.blue);}
 					}
 				}
 			}
 		}
-		
 	}
 
 	@Override

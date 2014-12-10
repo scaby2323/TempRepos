@@ -14,14 +14,11 @@ import javax.swing.*;
  */
 public class Game implements Runnable {
 	public void run() {
-		// NOTE : recall that the 'final' keyword notes inmutability
-		// even for local variables.
 
-		// Top-level frame in which game components live
+
 		final JFrame frame = new JFrame("BrickBreaker");
 		frame.setLocation(300, 300);
 
-		// Status panel
 		final JPanel status_panel = new JPanel();
 		frame.add(status_panel, BorderLayout.SOUTH);
 		final JLabel status = new JLabel("Running...");
@@ -32,22 +29,18 @@ public class Game implements Runnable {
 		status_panel.add(score); 
 		final JLabel times = new JLabel("Time: 0"); 
 		status_panel.add(times); 
-		int play = 2; 
 
-		// Main playing area
-		final GameCourt court = new GameCourt(status, lives, score,times, play);
+
+		final GameCourt court = new GameCourt(status, lives, score,times);
 		frame.add(court, BorderLayout.CENTER);
 
-		// Reset button
+		
 		final JPanel control_panel = new JPanel();
 		frame.add(control_panel, BorderLayout.NORTH);
-
-		// Note here that when we add an action listener to the reset
-		// button, we define it as an anonymous inner class that is
-		// an instance of ActionListener with its actionPerformed()
-		// method overridden. When the button is pressed,
-		// actionPerformed() will be called.
+		
+		//Reset button
 		final JButton reset = new JButton("New Game");
+		//Quit button
 		final JButton quit = new JButton("Quit"); 
 		
 		reset.addActionListener(new ActionListener() {

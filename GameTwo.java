@@ -19,7 +19,7 @@ public class GameTwo implements Runnable {
 		final JLabel times = new JLabel("Time: 0"); 
 		status_panel.add(times); 
 		
-		final GameCourt court1 = new GameCourt(status, lives, score,times, 1);
+		final GameCourt court1 = new GameCourt(status, lives, score,times);
 		frame.add(court1, BorderLayout.NORTH);
 		
 		final JLabel status2 = new JLabel("");
@@ -31,7 +31,7 @@ public class GameTwo implements Runnable {
 		final JLabel times2 = new JLabel("Time: 0"); 
 		status_panel.add(times2); 
 		
-		final GameCourt court2 = new GameCourt(status2, lives2, score2, times2, 2); 
+		final GameCourt court2 = new GameCourt(status2, lives2, score2, times2	); 
 		frame.add(court2, BorderLayout.SOUTH); 
 		
 		// Put the frame on the screen

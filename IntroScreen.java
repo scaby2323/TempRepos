@@ -32,6 +32,12 @@ public class IntroScreen extends JPanel {
 		GameTwo game = new GameTwo(); 
 		game.run(); 
 	}
+
+	public void scores() {
+		HighScore score = new HighScore(); 
+		score.run(); 
+		
+	}
 	
 	
 	

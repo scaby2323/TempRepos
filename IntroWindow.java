@@ -30,6 +30,7 @@ public class IntroWindow implements Runnable{
 		final JButton two_play = new JButton("Two Player"); 
 		final JButton instructions = new  JButton("How To Play");
 		final JButton quit = new JButton("Quit"); 
+		final JButton scores = new JButton("High Scores"); 
 		
 		final IntroScreen screen = new IntroScreen(one_play, instructions, quit); 
 		frame.add(screen, BorderLayout.CENTER); 
@@ -62,6 +63,13 @@ public class IntroWindow implements Runnable{
 			}
 		}); 
 		control_panel.add(quit); 
+		
+		scores.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				screen.scores(); 
+			}
+		}); 
+		control_panel.add(scores);
 		
 		frame.pack();
 		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);

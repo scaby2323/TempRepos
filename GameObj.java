@@ -5,6 +5,7 @@
  */
 
 import java.awt.Graphics;
+import java.util.Vector;
 
 /** An object in the game. 
  *
@@ -31,7 +32,7 @@ public class GameObj {
 	/** Velocity: number of pixels to move every time move() is called */
 	public int v_x;
 	public int v_y;
-
+	
 	/** Upper bounds of the area in which the object can be positioned.  
 	 *    Maximum permissible x, y positions for the upper-left 
 	 *    hand corner of the object
@@ -60,6 +61,7 @@ public class GameObj {
 		// bounds for the upper left corner of the object.
 		this.max_x = court_width - width;
 		this.max_y = court_height - height;
+	
 	}
 
 
@@ -168,7 +170,6 @@ public class GameObj {
 	 */
 	public Direction hitObj(GameObj other) {
 		if (this.willIntersect(other)) {
-			hit = true; 
 			double dx = other.pos_x + other.width /2 - (pos_x + width /2);
 			double dy = other.pos_y + other.height/2 - (pos_y + height/2);
 
@@ -188,7 +189,6 @@ public class GameObj {
    }
   
 		} else {
-			hit = false; 
 			return null;
 		}
 
