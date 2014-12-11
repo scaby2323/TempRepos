@@ -11,9 +11,9 @@ import javax.swing.SwingUtilities;
 import javax.swing.event.DocumentListener;
 
 
-public class IntroWindow implements Runnable{
+public class IntroWindow{
 
-	@Override
+	
 	public void run() {
 		
 		//Top-level frame with the opening
@@ -31,12 +31,9 @@ public class IntroWindow implements Runnable{
 		frame.add(control_panel); 
 		
 		final JTextField username = new JTextField("Name"); 
-		username.setSize(50,50); 
-		username.addActionListener(new ActionListener(){
-			public void actionPerformed(ActionEvent e){
-				 String name = username.getText(); 	
-			}
-		});
+		username.setSize(50,50);
+		final String name = username.getText(); 	
+	
 		control_panel.add(username); 
 		
 		final JButton one_play = new JButton("One Player");
@@ -50,7 +47,7 @@ public class IntroWindow implements Runnable{
 		
 		one_play.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){
-				screen.one_play(); 
+				screen.one_play(name); 
 			}
 		}); 
 		control_panel.add(one_play); 
@@ -89,9 +86,7 @@ public class IntroWindow implements Runnable{
 		
 	}
 
-	public static void main(String[] args) {
-		SwingUtilities.invokeLater(new IntroWindow());
-	}
+	
 }
 	
 

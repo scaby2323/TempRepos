@@ -22,7 +22,7 @@ public class IntroScreen extends JPanel {
 		System.exit(0);
 	}
 
-	public void one_play() {
+	public void one_play(String user) {
 		Game game = new Game();
 		game.run(); 	
 		

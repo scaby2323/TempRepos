@@ -7,14 +7,17 @@
 // imports necessary libraries for Java swing
 import java.awt.*;
 import java.awt.event.*;
+
 import javax.swing.*;
 
 /**
  * Game Main class that specifies the frame and widgets of the GUI
  */
-public class Game implements Runnable {
-	public void run() {
+public class Game implements Runnable{
 
+	private String user;
+
+	public void run() {
 
 		final JFrame frame = new JFrame("BrickBreaker");
 		frame.setLocation(300, 300);
@@ -29,12 +32,10 @@ public class Game implements Runnable {
 		status_panel.add(score); 
 		final JLabel times = new JLabel("Time: 0"); 
 		status_panel.add(times); 
-
-
+		
 		final GameCourt court = new GameCourt(status, lives, score,times);
 		frame.add(court, BorderLayout.CENTER);
 
-		
 		final JPanel control_panel = new JPanel();
 		frame.add(control_panel, BorderLayout.NORTH);
 		
@@ -46,7 +47,7 @@ public class Game implements Runnable {
 		
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				court.reset();
+				court.reset(user);
 			}
 		});
 		control_panel.add(reset);
@@ -72,15 +73,18 @@ public class Game implements Runnable {
 		frame.setVisible(true);
 
 		// Start game
-		court.reset();
+		court.reset(user);
 	}
 
-	/*
-	 * Main method run to start and run the game Initializes the GUI elements
-	 * specified in Game and runs it IMPORTANT: Do NOT delete! You MUST include
-	 * this in the final submission of your game.
-	 */
 	public static void main(String[] args) {
 		SwingUtilities.invokeLater(new Game());
 	}
+
+	public void getUser(String user) {
+		this.user = user;
+		
+	}
+
+
+
 }

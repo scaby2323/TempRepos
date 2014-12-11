@@ -14,7 +14,7 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 
 
-public class HighScore implements Runnable {
+public class HighScore {
 	
 	public void run(){
 		final JFrame frame = new JFrame("High Scores");
@@ -53,8 +53,5 @@ public class HighScore implements Runnable {
 		
 	}
 		
-	public static void main(String[] args) {
-			SwingUtilities.invokeLater(new IntroWindow());
-	}
-
+	
 }

@@ -10,27 +10,26 @@ public class GameTwo implements Runnable {
 		
 		final JPanel status_panel = new JPanel();
 		frame.add(status_panel, BorderLayout.SOUTH);
-		final JLabel status = new JLabel("Running...");
-		status_panel.add(status);
-		final JLabel lives = new JLabel("Lives: 3"); 
-		status_panel.add(lives); 
-		final JLabel score = new JLabel("Score: 0"); 
-		status_panel.add(score); 
+		final JLabel play1_status = new JLabel("Running...");
+		status_panel.add(play1_status);
+		final JLabel play1_lives = new JLabel("Player 1 Lives: 3"); 
+		status_panel.add(play1_lives); 
+		final JLabel play1_score = new JLabel("Player 1 Score: 0"); 
+		status_panel.add(play1_score); 
 		final JLabel times = new JLabel("Time: 0"); 
 		status_panel.add(times); 
 		
-		final GameCourtTwo court = new GameCourtTwo(status, lives, score,times);
+		
+		
+		final JLabel play2_status = new JLabel("");
+		status_panel.add(play2_status);
+		final JLabel play2_lives = new JLabel("Player 2 Lives: 3"); 
+		status_panel.add(play2_lives); 
+		final JLabel play2_score = new JLabel("Player 2 Score: 0"); 
+		status_panel.add(play2_score); 
+
+		final GameCourtTwo court = new GameCourtTwo(play1_status, play1_lives, play1_score, play2_status, play2_lives, play2_score, times);
 		frame.add(court, BorderLayout.CENTER);
-		
-		final JLabel status2 = new JLabel("");
-		status_panel.add(status2);
-		final JLabel lives2 = new JLabel("Player 2 Lives: 3"); 
-		status_panel.add(lives2); 
-		final JLabel score2 = new JLabel("Player 2 Score: 0"); 
-		status_panel.add(score2); 
-		final JLabel times2 = new JLabel("Time: 0"); 
-		status_panel.add(times2); 
-		
 		
 		// Put the frame on the screen
 		frame.pack();

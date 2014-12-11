@@ -54,10 +54,10 @@ public class GameCourtTwo extends JPanel {
 	private int time = 0;
 	private int level = 0;
 	private int num_blocks = 0;
-	private int space_pressed = 0;
+	private int space_pressed = 0; // player 1 start
+	private int enter_pressed = 0; //player 2 start
 
-	private Set<KeyEvent> pressed = new HashSet<KeyEvent>();
-	private Set<KeyEvent> released = new HashSet<KeyEvent>();
+	private Set<Integer> pressed = new HashSet<Integer>();
 
 	public void makeLevel(int l) throws IOException {
 		level_info = new LevelScanner("Levels.txt");
@@ -89,13 +89,12 @@ public class GameCourtTwo extends JPanel {
 					int x = 80 * r;
 					temp = new Blocks(x, y, COURT_WIDTH, COURT_HEIGHT);
 					play2_blocks[r][c] = temp;
-					num_blocks++;
 				}
 			}
 		}
 	}
 
-	public GameCourtTwo(JLabel status, JLabel lives, JLabel score, JLabel times) {
+	public GameCourtTwo(JLabel play1_status, JLabel play1_lives, JLabel play1_score, JLabel play2_status, JLabel play2_lives, JLabel play2_score, JLabel times) {
 		setBorder(BorderFactory.createLineBorder(Color.BLACK));
 
 		final Timer timer = new Timer(INTERVAL, new ActionListener() {
@@ -106,22 +105,28 @@ public class GameCourtTwo extends JPanel {
 		timer.start();
 
 		addKeyListener(new KeyAdapter() {
+			@Override
 			public synchronized void keyPressed(KeyEvent e) {
-				pressed.add(e);
-				released.remove(e);
-				if (pressed.size() > 1) {
-					Iterator<KeyEvent> iter = pressed.iterator();
+				pressed.add(e.getKeyCode());
+				if (pressed.size() > 0) {
+					Iterator<Integer> iter = pressed.iterator();
 					while (iter.hasNext()) {
-						KeyEvent click = iter.next();
-						if(click.getKeyCode() == KeyEvent.VK_SPACE){
+						int click = iter.next();
+						if(click == KeyEvent.VK_SPACE){
+							System.out.println("space");
+							space_pressed = 1;
 							play1_ball.v_x = 4;
 							play1_ball.v_y = -5;
+						}
+						else if(click == KeyEvent.VK_ENTER){
+							System.out.println("enter");
+							enter_pressed = 1; 
 							play2_ball.v_x = 4;
 							play2_ball.v_y = -5;
-							space_pressed = 1;
 						}
-						else if(click.getKeyCode() ==KeyEvent.VK_RIGHT){
-							if (space_pressed == 0) {
+						else if(click ==KeyEvent.VK_RIGHT){
+							System.out.println("right");
+							if (enter_pressed == 0) {
 								play2_ball.v_x = BAR_VELOCITY;
 								play2_bar.v_x = BAR_VELOCITY;
 							} 
@@ -129,15 +134,17 @@ public class GameCourtTwo extends JPanel {
 								play2_bar.v_x = BAR_VELOCITY;
 							}
 						}
-						else if(click.getKeyCode() == KeyEvent.VK_LEFT){
-							if (space_pressed == 0) {
+						else if(click== KeyEvent.VK_LEFT){
+							System.out.println("left");
+							if (enter_pressed == 0) {
 								play2_ball.v_x = -BAR_VELOCITY;
 								play2_bar.v_x = -BAR_VELOCITY;
 							} else {
 								play2_bar.v_x = -BAR_VELOCITY;
 							}
 						}
-						else if(click.getKeyCode() == KeyEvent.VK_D){
+						else if(click == KeyEvent.VK_D){
+							System.out.println("d");
 							if (space_pressed == 0) {
 								play1_ball.v_x = BAR_VELOCITY;
 								play1_bar.v_x = BAR_VELOCITY;
@@ -145,7 +152,8 @@ public class GameCourtTwo extends JPanel {
 								play1_bar.v_x = BAR_VELOCITY;
 							}
 						}
-						else if(click.getKeyCode() ==KeyEvent.VK_A){
+						else if(click ==KeyEvent.VK_A){
+							System.out.println("a");
 							if (space_pressed == 0) {
 								System.out.println("a");
 								play1_ball.v_x = -BAR_VELOCITY;
@@ -157,59 +165,36 @@ public class GameCourtTwo extends JPanel {
 					}
 				}
 			}
-
+			@Override
 			public synchronized void keyReleased(KeyEvent e) {
-				pressed.remove(e);
-				released.add(e);
-				if (released.size() > 1) {
-					Iterator<KeyEvent> iter = released.iterator();
-					while (iter.hasNext()) {
-						KeyEvent event = iter.next();
-						if(event.getKeyCode()== KeyEvent.VK_RIGHT){
-							if (space_pressed == 0) {
-								play1_ball.v_x = 0;
-								play1_bar.v_x = 0;
-							} else {
-								play1_bar.v_x = 0;
-							}
-						}
-						else if(event.getKeyCode() == KeyEvent.VK_LEFT){
-							if (space_pressed == 0) {
-								play1_ball.v_x = 0;
-								play1_bar.v_x = 0;
-							} else {
-								play1_bar.v_x = 0;
-							}
-						}
-						else if(event.getKeyCode() == KeyEvent.VK_D){
-							if (space_pressed == 0) {
-								play2_ball.v_x = 0;
-								play2_bar.v_x = 0;
-							} else {
-								play2_bar.v_x = 0;
-							}
-						}
-						else if(event.getKeyCode() == KeyEvent.VK_A){
-							if (space_pressed == 0) {
-								play2_ball.v_x = 0;
-								play2_bar.v_x = 0;
-							} else {
-								play2_bar.v_x = 0;
-							}
-						}
-					}
-
+				System.out.println("before " + pressed);
+				pressed.remove(e.getKeyCode());
+			
+				if (enter_pressed == 0) {
+					play2_ball.v_x = 0;
+					play2_bar.v_x = 0;
+				} 
+				else if(enter_pressed == 1){
+					play2_bar.v_x = 0;
+				}
+				if (space_pressed == 0) {
+					play1_ball.v_x = 0;
+					play1_bar.v_x = 0;
+				} 
+				else if(space_pressed == 1){
+					play1_bar.v_x = 0;
 				}
 			}
 		});
+		//System.out.println(pressed);
 
 		setFocusable(true);
-		this.play1_status = status;
-		this.play2_status = status;
-		this.play1_lives = lives;
-		this.play2_lives = lives;
-		this.play1_score = score;
-		this.play2_score = score;
+		this.play1_status = play1_status;
+		this.play2_status = play2_status;
+		this.play1_lives = play1_lives;
+		this.play2_lives = play2_lives;
+		this.play1_score = play1_score;
+		this.play2_score = play2_score;
 		this.times = times;
 
 	}
@@ -296,15 +281,9 @@ public class GameCourtTwo extends JPanel {
 				for (int c = 0; c < play1_blocks[0].length; c++) {
 					if (play1_blocks[r][c] != null)
 						play1_blocks[r][c].moveDown();
-				}
-			}
-		}
-
-		if (time % 500 == 0) {
-			for (int r = 0; r < play2_blocks.length; r++) {
-				for (int c = 0; c < play2_blocks[0].length; c++) {
 					if (play2_blocks[r][c] != null)
 						play2_blocks[r][c].moveDown();
+					
 				}
 			}
 		}
@@ -323,17 +302,16 @@ public class GameCourtTwo extends JPanel {
 			play2_score.setText("Final Score: " + play2_num_score);
 		}
 
-		if (play1_ball.pos_y >= play1_ball.max_y) {
+		if (play1_ball.pos_y >= 300) {
 			play1_num_lives--;
 			space_pressed = 0;
 			if (play1_num_lives == 0) {
 				playing = false;
 				play1_status.setText("Out of Lives! Player 1 lost");
-				play2_status
-				.setText("Player 1 is out of lives. Player 2 wins!");
+				play2_status.setText("Player 1 is out of lives. Player 2 wins!");
 				play1_score.setText("Final Score: " + play1_num_score);
 				play2_score.setText("Final Score: " + play2_num_score);
-			} else {
+			} else if(play1_num_lives > 0) {
 				playing = true;
 				play1_status.setText("Lost a life :(");
 				play1_lives.setText("Lives: " + play1_num_lives);
@@ -346,20 +324,20 @@ public class GameCourtTwo extends JPanel {
 
 		if (play2_ball.pos_y >= play2_ball.max_y) {
 			play2_num_lives--;
-			space_pressed = 0;
+			enter_pressed = 0;
 			if (play2_num_lives == 0) {
 				playing = false;
 				play2_status.setText("Out of Lives! Player 2 lost");
 				play1_status.setText("Player 1 wins!");
 				play1_score.setText("Final Score: " + play1_num_score);
 				play2_score.setText("Final Score: " + play2_num_score);
-			} else {
+			} else if (play2_num_lives > 0){
 				playing = true;
 				play2_status.setText("Lost a life :(");
 				play2_lives.setText("Lives: " + play2_num_lives);
 				play2_score.setText("Score: " + play2_num_score + " Level: "
 						+ level + " Blocks Hit: " + play2_hitBlocks.size());
-				play2_ball = new Circle(410, 240, COURT_WIDTH, COURT_HEIGHT);
+				play2_ball = new Circle(410, 545, COURT_WIDTH, COURT_HEIGHT);
 				play2_bar = new Rectangle(380, 565, COURT_WIDTH, COURT_HEIGHT);
 			}
 		}

@@ -50,6 +50,7 @@ public class GameCourt extends JPanel{
 
 	//create ArrayList of blocks that were hit
 	private ArrayList<Blocks> hitBlocks = new ArrayList<Blocks>(); 
+	private TreeMap<String, Integer> scores = new TreeMap<String, Integer>(); 
 
 	public LevelScanner level_info;
 
@@ -59,6 +60,7 @@ public class GameCourt extends JPanel{
 	private int level = 0;  
 	private int num_blocks = 0; 
 	private int space_pressed = 0; 
+	private String username; 
 
 	public void makeLevel(int l) throws IOException{
 		level_info = new LevelScanner("Levels.txt");
@@ -140,7 +142,7 @@ public class GameCourt extends JPanel{
 		this.times = times; 
 	}
 
-	public void reset() {
+	public void reset(String user) {
 
 		ball = new Circle(410, 345, COURT_WIDTH, COURT_HEIGHT);
 		bar = new Rectangle(380,365,COURT_WIDTH, COURT_HEIGHT); 
@@ -150,6 +152,7 @@ public class GameCourt extends JPanel{
 		time = 0; 
 		space_pressed = 0; 
 		level = 0; 
+		
 
 		try {
 			makeLevel(level); 
