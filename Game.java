@@ -42,6 +42,7 @@ public class Game implements Runnable {
 		final JButton reset = new JButton("New Game");
 		//Quit button
 		final JButton quit = new JButton("Quit"); 
+		final JButton back = new JButton("Main Menu"); 
 		
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
@@ -56,6 +57,13 @@ public class Game implements Runnable {
 			}
 		});
 		control_panel.add(quit); 
+		
+		back.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				court.back(); 
+			}
+		});
+		control_panel.add(back); 
 
 		
 		// Put the frame on the screen

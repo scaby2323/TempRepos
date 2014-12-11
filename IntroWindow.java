@@ -1,4 +1,4 @@
-import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
@@ -6,7 +6,9 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JTextField;
 import javax.swing.SwingUtilities;
+import javax.swing.event.DocumentListener;
 
 
 public class IntroWindow implements Runnable{
@@ -16,15 +18,26 @@ public class IntroWindow implements Runnable{
 		
 		//Top-level frame with the opening
 		final JFrame frame = new JFrame("BrickBreaker"); 
+		frame.setLayout(new FlowLayout()); 
+		frame.setSize(400,400);
 		frame.setLocation(300,300);
 		
 		final JPanel welcome_panel = new JPanel(); 
-		frame.add(welcome_panel, BorderLayout.NORTH);
+		frame.add(welcome_panel);
 		final JLabel welcome = new JLabel("Welcome to BrickBreaker!"); 
 		welcome_panel.add(welcome); 
 		
 		final JPanel control_panel = new JPanel(); 
-		frame.add(control_panel, BorderLayout.PAGE_END); 
+		frame.add(control_panel); 
+		
+		final JTextField username = new JTextField("Name"); 
+		username.setSize(50,50); 
+		username.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				 String name = username.getText(); 	
+			}
+		});
+		control_panel.add(username); 
 		
 		final JButton one_play = new JButton("One Player");
 		final JButton two_play = new JButton("Two Player"); 
@@ -33,8 +46,7 @@ public class IntroWindow implements Runnable{
 		final JButton scores = new JButton("High Scores"); 
 		
 		final IntroScreen screen = new IntroScreen(one_play, instructions, quit); 
-		frame.add(screen, BorderLayout.CENTER); 
-			
+		frame.add(screen); 
 		
 		one_play.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e){

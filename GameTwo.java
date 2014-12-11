@@ -6,21 +6,21 @@ import javax.swing.*;
 public class GameTwo implements Runnable {
 	public void run(){
 		final JFrame frame = new JFrame("Two Player BrickBreaker");
-		frame.setLocation(100,300); 
+		frame.setLocation(500,500); 
 		
 		final JPanel status_panel = new JPanel();
 		frame.add(status_panel, BorderLayout.SOUTH);
 		final JLabel status = new JLabel("Running...");
 		status_panel.add(status);
-		final JLabel lives = new JLabel("Player 1 Lives: 3"); 
+		final JLabel lives = new JLabel("Lives: 3"); 
 		status_panel.add(lives); 
-		final JLabel score = new JLabel("Player 1 Score: 0"); 
+		final JLabel score = new JLabel("Score: 0"); 
 		status_panel.add(score); 
 		final JLabel times = new JLabel("Time: 0"); 
 		status_panel.add(times); 
 		
-		final GameCourt court1 = new GameCourt(status, lives, score,times);
-		frame.add(court1, BorderLayout.NORTH);
+		final GameCourtTwo court = new GameCourtTwo(status, lives, score,times);
+		frame.add(court, BorderLayout.CENTER);
 		
 		final JLabel status2 = new JLabel("");
 		status_panel.add(status2);
@@ -31,8 +31,6 @@ public class GameTwo implements Runnable {
 		final JLabel times2 = new JLabel("Time: 0"); 
 		status_panel.add(times2); 
 		
-		final GameCourt court2 = new GameCourt(status2, lives2, score2, times2	); 
-		frame.add(court2, BorderLayout.SOUTH); 
 		
 		// Put the frame on the screen
 		frame.pack();
@@ -40,32 +38,36 @@ public class GameTwo implements Runnable {
 		frame.setVisible(true); 
 
 		final JPanel control_panel = new JPanel();
-		frame.add(control_panel, BorderLayout.EAST);
+		frame.add(control_panel, BorderLayout.NORTH);
 		
 		final JButton reset = new JButton("New Game");
 		final JButton quit = new JButton("Quit"); 
+		final JButton back = new JButton("Main Menu"); 
 		
 		reset.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				court1.reset();
-				court2.reset(); 
+				court.reset();
 			}
 		});
 		control_panel.add(reset);
 		
 		quit.addActionListener(new ActionListener(){
 			public void actionPerformed(ActionEvent e){
-				court1.quit(); 
-				court2.reset(); 
+				court.quit(); 
 			}
 		});
 		control_panel.add(quit); 
 
-		// Start game
-		court1.reset();
+		back.addActionListener(new ActionListener(){
+			public void actionPerformed(ActionEvent e){
+				court.back(); 
+			}
+		});
+		control_panel.add(back); 
 
 		// Start game
-		court2.reset();	
+		court.reset();
+
 	}
 	
 	public static void main(String[] args) {

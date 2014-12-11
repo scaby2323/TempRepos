@@ -14,14 +14,14 @@ import java.awt.*;
 public class Circle extends GameObj {
 
 	public static final int SIZE = 20;
-	public static final int INIT_POS_X = 410;
-	public static final int INIT_POS_Y = 345;
+	/*public static final int INIT_POS_X = 410;
+	public static final int INIT_POS_Y = 345;*/
 	public static int INIT_VEL_X = 0;
 	public static int INIT_VEL_Y = 0;
 	
 
-	public Circle(int courtWidth, int courtHeight) {
-		super(INIT_VEL_X, INIT_VEL_Y, INIT_POS_X, INIT_POS_Y, SIZE, SIZE,
+	public Circle(int x, int y, int courtWidth, int courtHeight) {
+		super(INIT_VEL_X, INIT_VEL_Y, x, y, SIZE, SIZE,
 				courtWidth, courtHeight);
 	}
 	

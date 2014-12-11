@@ -134,9 +134,6 @@ public class GameCourt extends JPanel{
 
 		setFocusable(true);
 
-		COURT_WIDTH = 800;
-		COURT_HEIGHT = 400;
-
 		this.status = status;
 		this.lives = lives; 
 		this.score = score; 
@@ -145,8 +142,8 @@ public class GameCourt extends JPanel{
 
 	public void reset() {
 
-		ball = new Circle(COURT_WIDTH, COURT_HEIGHT);
-		bar = new Rectangle(COURT_WIDTH, COURT_HEIGHT); 
+		ball = new Circle(410, 345, COURT_WIDTH, COURT_HEIGHT);
+		bar = new Rectangle(380,365,COURT_WIDTH, COURT_HEIGHT); 
 		hitBlocks = new ArrayList<Blocks>(); 
 		num_lives = 3; 
 		num_score = 0; 
@@ -172,8 +169,8 @@ public class GameCourt extends JPanel{
 
 	public void nextLevel(){
 		level++; 
-		ball = new Circle(COURT_WIDTH, COURT_HEIGHT); 
-		bar = new Rectangle(COURT_WIDTH, COURT_HEIGHT);
+		ball = new Circle(410, 345, COURT_WIDTH, COURT_HEIGHT); 
+		bar = new Rectangle(380, 365, COURT_WIDTH, COURT_HEIGHT);
 		hitBlocks = new ArrayList<Blocks>();
 		num_blocks = 0 ;
 		space_pressed = 0; 
@@ -277,8 +274,8 @@ public class GameCourt extends JPanel{
 					lives.setText("Lives: " + num_lives); 
 					score.setText("Score: " + num_score + " Level: " +
 							level + " Blocks Hit: " + hitBlocks.size());
-					ball = new Circle(COURT_WIDTH, COURT_HEIGHT);
-					bar = new Rectangle(COURT_WIDTH, COURT_HEIGHT); 
+					ball = new Circle(410, 345, COURT_WIDTH, COURT_HEIGHT);
+					bar = new Rectangle(380,365,COURT_WIDTH, COURT_HEIGHT); 
 				}	
 			}
 			for(int r = 0; r < blocks.length; r++){
@@ -295,6 +292,12 @@ public class GameCourt extends JPanel{
 		}
 	}
 
+	public void back() {
+		playing = false; 
+		IntroWindow intro = new IntroWindow();
+		intro.run(); 
+	}
+	
 	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
@@ -308,10 +311,7 @@ public class GameCourt extends JPanel{
 			for(int j = 0; j < blocks[0].length ; j++){
 				Blocks check = blocks[i][j]; 
 				if(check != null){
-					System.out.print("not null   ");
 					if(check.hasHit() == false){
-						System.out.println(check.pos_x + "   " + check.pos_y);
-						System.out.println("r = " + i + " c = " + j + " wasnt hit");
 						check.draw(g);
 						if(j%2 == 0 && i%2 == 0){check.setColors(g, Color.red);}
 						else if(j%2 != 0 && i%2 != 0){check.setColors(g,Color.red);}
@@ -327,6 +327,7 @@ public class GameCourt extends JPanel{
 	public Dimension getPreferredSize() {
 		return new Dimension(COURT_WIDTH, COURT_HEIGHT);
 	}
+
 
 
 }

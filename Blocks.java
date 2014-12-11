@@ -35,7 +35,6 @@ public class Blocks extends GameObj {
 	
 	@Override
 	public void draw(Graphics g) {
-		g.setColor(Color.CYAN);
 		g.fillRect(pos_x, pos_y, width, height);
 		count++; 
 	}
